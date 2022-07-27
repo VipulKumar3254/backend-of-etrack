@@ -49,69 +49,128 @@ app
     // console.log(req.body[0])
     // console.log(JSON.parse(req.body).)
     conn.query("create database etrack;", (err, result, fields) => {
-      if (err) console.log(err.sqlMessage);
+      if (err) console.log( " etrack database not creaeted because "+ err.sqlMessage);
+
       else {
-        console.log("Database has been created.");
+        console.log("etrack database has been created.");
+        conn.query("use etrack", (err, result, fields) => {
+          if (err) console.log(" etrack database not selected because " +err.sqlMessage);
+          console.log("etrack is now selected.");
+          var arr = [];
+          var i = 0;
+          console.log( "req body is " +req.body)
+          while (true) {
+            if (req.body[i] == undefined) {
+              break;
+            }
+            arr[i] = req.body[i];
+            i++;
+          }
+          console.log("length of the array is "+arr.length);
+          console.log("array is" +arr);
+          var length = arr.length;
+          var query = " ";
+          for (i = 0; i < length; i++) {
+            query += `${arr[i]}  varchar(8)`;
+            if (i == length - 1) {
+              break;
+            }
+            query += ",";
+          }
+      
+          console.log("query is " +query);
+      
+          //query builder
+          var orgquery = ` create table fielddetails  ( departmentcount int , ${query});`;
+          console.log("original query is " +orgquery);
+      
+          conn.query(orgquery, (err, result, fields) => {
+            if (err) console.log(err.sqlMessage);
+            else console.log(result);
+          });
+      
+          // form conversion of the query
+      
+          var insertionQuery = " ";
+          for (i = 0; i < length; i++) {
+            if (i == 0) {
+              insertionQuery += `insert into fielddetails values (${length},`;
+            }
+            insertionQuery += `"${arr[i]}"`;
+            if (i == length - 1) {
+              insertionQuery += ");";
+              break;
+            }
+            insertionQuery += ",";
+          }
+      
+          console.log( "insertion query is "+insertionQuery);
+          conn.query(insertionQuery, (err, result, fields) => {
+            if (err) console.log(err.sqlMessage);
+            else console.log(result);
+          });
+
+        })
       }
-    });
+    })
 
-    conn.query("use etrack", (err, result, fields) => {
-      if (err) console.log(err.sqlMessage);
-      console.log("etrack is now selected.");
-    });
+    // conn.query("use etrack", (err, result, fields) => {
+    //   if (err) console.log(" etrack database not selected because " +err.sqlMessage);
+    //   console.log("etrack is now selected.");
+    // })
 
-    var arr = [];
-    var i = 0;
-    while (true) {
-      if (req.body[i] == undefined) {
-        break;
-      }
-      arr[i] = req.body[i];
-      i++;
-    }
-    console.log(arr.length);
-    console.log(arr);
-    var length = arr.length;
-    var query = " ";
-    for (i = 0; i < length; i++) {
-      query += `  ${arr[i]}  varchar(8)`;
-      if (i == length - 1) {
-        break;
-      }
-      query += ",";
-    }
+    // var arr = [];
+    // var i = 0;
+    // while (true) {
+    //   if (req.body[i] == undefined) {
+    //     break;
+    //   }
+    //   arr[i] = req.body[i];
+    //   i++;
+    // }
+    // console.log(arr.length);
+    // console.log(arr);
+    // var length = arr.length;
+    // var query = " ";
+    // for (i = 0; i < length; i++) {
+    //   query += `  ${arr[i]}  varchar(8)`;
+    //   if (i == length - 1) {
+    //     break;
+    //   }
+    //   query += ",";
+    // }
 
-    console.log(query);
+    // console.log(query);
 
-    //query builder
-    var orgquery = ` create table fielddetails  ( departmentcount int , ${query});`;
-    console.log(orgquery);
+    // //query builder
+    // var orgquery = ` create table fielddetails  ( departmentcount int , ${query});`;
+    // console.log(orgquery);
 
-    conn.query(orgquery, (err, result, fields) => {
-      if (err) console.log(err.sqlMessage);
-      else console.log(result);
-    });
+    // conn.query(orgquery, (err, result, fields) => {
+    //   if (err) console.log(err.sqlMessage);
+    //   else console.log(result);
+    // });
 
-    // form conversion of the query
+    // // form conversion of the query
 
-    var insertionQuery = " ";
-    for (i = 0; i < length; i++) {
-      if (i == 0) {
-        insertionQuery += `insert into fielddetails values ( ${length}, `;
-      }
-      insertionQuery += ` " ${arr[i]} "`;
-      if (i == length - 1) {
-        insertionQuery += " ); ";
-        break;
-      }
-      insertionQuery += ",";
-    }
+    // var insertionQuery = " ";
+    // for (i = 0; i < length; i++) {
+    //   if (i == 0) {
+    //     insertionQuery += `insert into fielddetails values ( ${length}, `;
+    //   }
+    //   insertionQuery += ` " ${arr[i]} "`;
+    //   if (i == length - 1) {
+    //     insertionQuery += " ); ";
+    //     break;
+    //   }
+    //   insertionQuery += ",";
+    // }
 
-    console.log(insertionQuery);
-    conn.query(insertionQuery, (err, result, fields) => {
-      if (err) console.log(err.sqlMessage);
-      else console.log(result);
-    });
+    // console.log(insertionQuery);
+    // conn.query(insertionQuery, (err, result, fields) => {
+    //   if (err) console.log(err.sqlMessage);
+    //   else console.log(result);
+    // });
     //insertion query
     // var insertQuery = `insert into fielddetails values  `
   });
@@ -175,6 +234,11 @@ app
 
 app.route("/departmentCount").post((req, res) => {
   console.log(req.body);
+  conn.query("use etrack ;",(err,result,fields)=>{
+    if(err) console.log("error is " + errr.sqlMessage)
+    console.log("etrack is now selected");
+
+  })
   conn.query(
     "create table departmentcount ( id int , departmentCount int );",
     (err, result, field) => {
@@ -238,6 +302,10 @@ app.route("/departmentCount").post((req, res) => {
 
 
 app.route("/fetchDepartmentCount").get((req, res) => {
+  conn.query("use etrack ;",(err,result,fields)=>{
+    if (err) console.log("error is "+ err.sqlMessage)
+    console.log("etrack is now selected");
+  })
   conn.query("select  * from departmentcount;", async (err, result, fields) => {
     if (err) {
       console.log(err);
@@ -323,7 +391,7 @@ app
     });
 
     res.send(" i think done.");
-    res.writeHead(200).send("okk");
+    // res.writeHead(200).send("okk");
   });
 
 app.route("/departmentnames").get((req, res) => {

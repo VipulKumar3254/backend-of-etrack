@@ -10,13 +10,14 @@ const conn = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
-  database: "etrack",
+  
   connectionLimit: 10
 });
 
 conn.connect((err) => {
   if (err) {
     console.log(err);
+    // console.log("not connected");
   }
   console.log("get connected on thread id " + conn.threadId);
 });
