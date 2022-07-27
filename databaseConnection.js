@@ -10,7 +10,8 @@ const conn = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
-  database: "hashing",
+  database: "etrack",
+  connectionLimit: 10
 });
 
 conn.connect((err) => {
